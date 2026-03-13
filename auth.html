@@ -280,7 +280,9 @@
             const plans = JSON.parse(localStorage.getItem('helper_fee_plans') || '[]');
             const select = document.getElementById('signup-plan');
             if (select) {
-                select.innerHTML = plans.map(p => `<option value="${p.id}">${p.name} - ${p.price} PKR (${p.days} Days)</option>`).join('');
+                // Filter out hidden plans like 'friends_family'
+                const publicPlans = plans.filter(p => !p.hidden);
+                select.innerHTML = publicPlans.map(p => `<option value="${p.id}">${p.name} - ${p.price} PKR (${p.days === -1 ? 'Lifetime' : p.days + ' Days'})</option>`).join('');
             }
         }
         document.addEventListener('DOMContentLoaded', loadSignupPlans);

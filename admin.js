@@ -129,7 +129,8 @@ const DEFAULT_PLANS = [
     { id: '3month', name: '3 Month Pro', price: 2500, days: 90 },
     { id: '6month', name: '6 Month Pro', price: 4000, days: 180 },
     { id: '1year', name: '1 Year Pro', price: 7000, days: 365 },
-    { id: 'unlimited', name: 'Unlimited Lifetime', price: 15000, days: -1 }
+    { id: 'unlimited', name: 'Unlimited Lifetime', price: 15000, days: -1 },
+    { id: 'friends_family', name: 'Friends & Family', price: 0, days: -1, hidden: true }
 ];
 
 const DEFAULT_DISCOUNTS = [
@@ -166,9 +167,10 @@ function renderFeePlans() {
     if (!container) return;
 
     container.innerHTML = plans.map((p, index) => `
-        <div class="glass-panel p-3 mb-2" style="display:flex; justify-content:space-between; align-items:center;">
+        <div class="glass-panel p-3 mb-2" style="display:flex; justify-content:space-between; align-items:center; ${p.hidden ? 'border:1px solid var(--accent);' : ''}">
             <div>
-                <strong>${p.name}</strong> - ${p.price} PKR (${p.days} Days)
+                <strong>${p.name}</strong> ${p.hidden ? '<span class="badge-sm" style="background:var(--accent); color:#000; font-size:0.6rem; padding:2px 5px; border-radius:4px; margin-left:5px;">HIDDEN</span>' : ''} 
+                <br><span class="text-secondary" style="font-size:0.8rem;">${p.price} PKR | ${p.days === -1 ? 'Lifetime' : p.days + ' Days'}</span>
             </div>
             <button onclick="deletePlan(${index})" class="btn-sm" style="background:var(--danger)"><i class="fa-solid fa-trash"></i></button>
         </div>
@@ -440,6 +442,7 @@ function renderAdminPanel() {
             <div style="display:flex; gap:5px;">
                 <button onclick="updateAccess(${index}, 30)" class="btn-sm" style="background:var(--success)">+30 Days</button>
                 <button onclick="makeUnlimited(${index})" class="btn-sm" style="background:var(--accent)">Make Unlimited</button>
+                <button onclick="assignSpecialPlan(${index})" class="btn-sm" style="background:#6c5ce7">Friends & Family</button>
                 <button onclick="removeUserAccess(${index})" class="btn-sm" style="background:var(--danger)">Revoke</button>
             </div>
         </div>
@@ -462,6 +465,17 @@ window.makeUnlimited = (index) => {
         saveAuthUsers(users);
         renderAdminPanel();
         alert("User is now Unlimited!");
+    }
+};
+
+window.assignSpecialPlan = (index) => {
+    if(confirm("Assign 'Friends & Family' Lifetime Zero-Cost Plan to this user?")) {
+        const users = getAuthUsers();
+        users[index].plan = 'friends_family';
+        users[index].expiry = -1; // Lifetime
+        saveAuthUsers(users);
+        renderAdminPanel();
+        alert("Special 'Friends & Family' Plan assigned!");
     }
 };
 

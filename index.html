@@ -4,12 +4,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MY VIDEO HELPER — Free Unlimited Video Editor</title>
+    <title>NEXUS EDIT — Professional Cloud Video Editor</title>
     <meta name="description"
-        content="Free unlimited web video editor like CapCut with auto captions, trending effects, templates, voice effects, speed curve, background removal, and pro editing tools.">
+        content="Professional cloud-based video editor with magnetic timeline, AI features, and cinematic effects.">
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f0814;
+            --panel-bg: rgba(255, 255, 255, 0.03);
+            --accent: #00e5ff;
+            --sidebar-width: 260px;
+        }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg-dark); }
+        .main-container { display: flex; height: 100vh; overflow: hidden; }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: rgba(0,0,0,0.4);
+            border-right: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            backdrop-filter: blur(20px);
+        }
+        .sidebar-logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sidebar-logo span { color: var(--accent); }
+        .nav-menu { flex: 1; list-style: none; padding: 0; }
+        .nav-item {
+            padding: 12px 15px;
+            border-radius: 12px;
+            color: rgba(255,255,255,0.6);
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 5px;
+            text-decoration: none;
+        }
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255,255,255,0.05);
+            color: var(--accent);
+        }
+        .sidebar-footer { padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); }
+
+        /* Workspace Grid */
+        .workspace {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 320px 1fr 340px;
+            grid-template-rows: 60px 1fr 300px;
+            gap: 15px;
+            padding: 15px;
+            background: radial-gradient(circle at top right, #1a0b2e, #0f0814);
+        }
+    </style>
     <script src="admin.js"></script>
     <script>
         // Access Shield: Redirect if no access
@@ -1417,6 +1477,11 @@
                 document.getElementById('modal-expiry-date').innerText = currentUser.expiry === -1 ? "Lifetime (Unlimited)" : new Date(currentUser.expiry).toLocaleDateString();
             };
         }
+
+        document.getElementById('btn-free-trial').onclick = (e) => {
+            e.preventDefault();
+            window.location.href = 'auth.html?signup=true&trial=true';
+        };
 
         // Init Admin Controls
         if (localStorage.getItem('is_admin_mode') === 'true') {
