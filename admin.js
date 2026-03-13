@@ -366,11 +366,13 @@ function finalizeSignup(name, email, pass, plan, extra) {
     const signupDate = new Date().getTime();
     
     const newUser = { 
-        name, email, pass, plan, expiry, 
+        name, 
+        email, 
+        pass, 
+        plan, 
+        expiry, 
         signupDate,
-        country: extra.country,
-        phone: extra.phone,
-        dob: extra.dob,
+        phone: document.getElementById('signup-phone').value,
         status: 'pending' 
     };
     users.push(newUser);
