@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KINETIC AI - Admin Master Panel</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="admin.js"></script>
+    <script>
+        // Check access immediately
+        const isAdmin = localStorage.getItem('is_admin_mode') === 'true';
+        if (!isAdmin) {
+            window.location.href = 'auth.html';
+        }
+    </script>
+</head>
+<body>
+    <div class="app-bg"></div>
+    
+    <!-- Top Navigation Area -->
+    <header class="top-nav">
+        <div class="logo"><i class="fa-solid fa-shield-halved"></i> MASTER ADMIN PANEL</div>
+        <div class="nav-actions">
+            <button class="nav-btn" onclick="window.location.href='index.html'"><i class="fa-solid fa-arrow-left"></i> Back to Editor</button>
+            <button class="nav-btn" onclick="logoutAdmin()" style="color:var(--danger)"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+        </div>
+    </header>
+
+    <div class="main-layout" style="display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 2rem; overflow-y: auto;">
+        
+        <!-- Admin Dashboard Cards -->
+        <div style="display: flex; gap: 1rem; width: 100%; max-width: 1000px; margin-bottom: 2rem;">
+            <div class="glass-panel p-4" style="flex: 1; text-align: center;">
+                <i class="fa-solid fa-users fa-2x mb-2" style="color:var(--accent);"></i>
+                <div style="font-size: 2rem; font-weight: bold;" id="stat-users">1,204</div>
+                <div class="text-secondary text-xs">Total Registered Users</div>
+            </div>
+            <div class="glass-panel p-4" style="flex: 1; text-align: center;">
+                <i class="fa-solid fa-crown fa-2x mb-2" style="color:#f1c40f;"></i>
+                <div style="font-size: 2rem; font-weight: bold;" id="stat-pro">842</div>
+                <div class="text-secondary text-xs">Active PRO Users</div>
+            </div>
+            <div class="glass-panel p-4" style="flex: 1; text-align: center;">
+                <i class="fa-solid fa-video fa-2x mb-2" style="color:var(--success);"></i>
+                <div style="font-size: 2rem; font-weight: bold;">12,450</div>
+                <div class="text-secondary text-xs">Videos Generated</div>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; width: 100%; max-width: 1000px; margin-bottom: 2rem;">
+            <!-- Admin Security Settings -->
+            <div class="glass-panel p-4">
+                <h3 class="mb-3"><i class="fa-solid fa-user-lock"></i> Master Security</h3>
+                <div style="display: flex; flex-direction: column; gap: 15px;">
+                    <div>
+                        <label class="text-xs text-secondary">Change Master Email</label>
+                        <div style="display: flex; gap: 5px; margin-top:5px;">
+                            <input type="email" id="admin-new-email" placeholder="New Admin Email" class="glass-input">
+                            <button class="btn-cyan hollow" onclick="changeAdminEmail(document.getElementById('admin-new-email').value)">Update</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-xs text-secondary">Change Strong Password</label>
+                        <div style="display: flex; gap: 5px; margin-top:5px;">
+                            <input type="password" id="admin-new-pass" placeholder="New Strong Password" class="glass-input">
+                            <button class="btn-cyan hollow" onclick="changeAdminPass(document.getElementById('admin-new-pass').value)">Update</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 p-3" style="background:rgba(255,255,0,0.05); border-radius:12px; border:1px solid rgba(255,255,0,0.2);">
+                    <p class="text-xs"><i class="fa-solid fa-shield-virus"></i> Alerts sent to: <br><strong>earnonlinemtn@gmail.com</strong></p>
+                </div>
+            </div>
+
+            <!-- Security Incident Logs -->
+            <div class="glass-panel p-4">
+                <h3 class="mb-3" style="color:var(--danger);"><i class="fa-solid fa-triangle-exclamation"></i> Security Threats</h3>
+                <div id="security-logs-list" style="max-height: 250px; overflow-y: auto;">
+                    <!-- Logs will be rendered here -->
+                </div>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; width: 100%; max-width: 1000px; margin-bottom: 2rem;">
+            <!-- Fee Plans Management -->
+            <div class="glass-panel p-4">
+                <h3 class="mb-3"><i class="fa-solid fa-money-bill-wave"></i> Fee Plans</h3>
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+                    <input type="text" id="plan-name" placeholder="Plan Name (e.g. 1 Month Pro)" class="glass-input">
+                    <div style="display: flex; gap: 5px;">
+                        <input type="number" id="plan-price" placeholder="Price (PKR)" class="glass-input" style="flex: 1;">
+                        <input type="number" id="plan-days" placeholder="Days" class="glass-input" style="flex: 1;">
+                    </div>
+                    <button class="btn-cyan" onclick="addPlan()"><i class="fa-solid fa-plus"></i> Add New Plan</button>
+                </div>
+                <div id="fee-plans-list" style="max-height: 300px; overflow-y: auto;">
+                    <!-- Fee plans list will be rendered here -->
+                </div>
+            </div>
+
+            <!-- Discount Management -->
+            <div class="glass-panel p-4">
+                <h3 class="mb-3"><i class="fa-solid fa-tag"></i> Discount Offers</h3>
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+                    <input type="text" id="disc-code" placeholder="Promo Code (e.g. SAVE20)" class="glass-input">
+                    <div style="display: flex; gap: 5px;">
+                        <input type="number" id="disc-val" placeholder="Discount Amount" class="glass-input" style="flex: 1;">
+                        <select id="disc-type" class="glass-input" style="flex: 1;">
+                            <option value="percent">Percent (%)</option>
+                            <option value="fixed">Fixed (PKR)</option>
+                        </select>
+                    </div>
+                    <button class="btn-cyan" onclick="addDiscount()"><i class="fa-solid fa-plus"></i> Create Coupon</button>
+                </div>
+                <div id="discounts-list" style="max-height: 300px; overflow-y: auto;">
+                    <!-- Discounts list will be rendered here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- User Management Table -->
+        <div class="glass-panel p-4 pb-4" style="width: 100%; max-width: 1000px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--panel-border); padding-bottom: 1rem; margin-bottom: 1rem;">
+                <h3><i class="fa-solid fa-users-gear"></i> User Access Control</h3>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="text" id="search-user" class="glass-input text-xs" placeholder="Search by email or name..." style="width: 250px;">
+                    <button class="btn-cyan hollow text-xs" onclick="alert('Feature coming soon!')"><i class="fa-solid fa-plus"></i> Add User</button>
+                </div>
+            </div>
+
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); color: var(--text-secondary);">
+                            <th style="padding: 1rem;">User ID / Name</th>
+                            <th style="padding: 1rem;">Email Address</th>
+                            <th style="padding: 1rem;">Subscription / Plan</th>
+                            <th style="padding: 1rem;">Status</th>
+                            <th style="padding: 1rem; text-align: right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-user-list">
+                        <!-- Users generated by admin.js -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+    </div> <!-- /main-layout -->
+
+    <script>
+        // Update stats
+        const users = JSON.parse(localStorage.getItem('helper_users') || '[]');
+        document.getElementById('stat-users').innerText = users.length;
+        document.getElementById('stat-pro').innerText = users.filter(u => u.plan !== 'trial').length;
+    </script>
+</body>
+</html>
