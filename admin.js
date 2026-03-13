@@ -405,7 +405,7 @@ if(loginForm) {
         if (user) {
             localStorage.setItem('current_user', JSON.stringify(user));
             localStorage.setItem('is_admin_mode', 'false');
-            window.location.href = 'index.html';
+            window.location.href = 'app.html';
         } else {
             sendSecurityAlert(`FAILED LOGIN ATTEMPT: Email: ${email}`);
             alert("Invalid Login Credentials!");
@@ -517,3 +517,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
